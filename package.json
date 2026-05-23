@@ -2,7 +2,7 @@
   "name": "betting-app-rules",
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://nicolai-strudsholm.github.io/scorekeeping/",
+  "homepage": "https://joabruno.github.io/scorekeeping/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
