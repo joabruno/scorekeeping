@@ -26,7 +26,7 @@ Builds the app for production to the `dist` folder.
 The app automatically deploys to GitHub Pages when you push to the `main` branch. GitHub Actions will:
 1. Install dependencies
 2. Build the React app
-3. Deploy to `https://nicolai-strudsholm.github.io/scorekeeping/`
+3. Deploy to `https://joabruno.github.io/scorekeeping/`
 
 **First time setup:**
 - Go to repository Settings → Pages
