@@ -9,7 +9,7 @@ export default function RulesDisplay() {
 
   useEffect(() => {
     // Fetch and parse the rules.md file
-    fetch('/rules.md')
+    fetch('./rules.md')
       .then(res => res.text())
       .then(text => {
         const html = md.render(text)
