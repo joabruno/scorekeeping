@@ -1,6 +1,12 @@
 import { useRef, useState } from 'react'
 
-function Navigation({ currentPage, setCurrentPage, isAdmin, onUnlockAdmin, onLockAdmin }) {
+function Navigation({
+  currentPage,
+  setCurrentPage,
+  isAdmin,
+  onUnlockAdmin,
+  onLockAdmin,
+}) {
   const [showAdminModal, setShowAdminModal] = useState(false)
   const [adminKeyInput, setAdminKeyInput] = useState('')
   const [adminError, setAdminError] = useState('')
@@ -62,53 +68,45 @@ function Navigation({ currentPage, setCurrentPage, isAdmin, onUnlockAdmin, onLoc
           >
             Betting App
           </h1>
-        <ul className="navbar-menu">
-          <li>
-            <button
-              className={`nav-link ${currentPage === 'rules' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('rules')}
-            >
-              Rules
-            </button>
-          </li>
-          {isAdmin && (
-            <>
-              <li>
-                <button
-                  className={`nav-link ${currentPage === 'join' ? 'active' : ''}`}
-                  onClick={() => setCurrentPage('join')}
-                >
-                  Join
-                </button>
-              </li>
-              <li>
-                <button
-                  className={`nav-link ${currentPage === 'tournament' ? 'active' : ''}`}
-                  onClick={() => setCurrentPage('tournament')}
-                >
-                  Tournament
-                </button>
-              </li>
-            </>
-          )}
-          <li>
-            <button
-              className={`nav-link ${currentPage === 'standings' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('standings')}
-            >
-              Standings
-            </button>
-          </li>
-          <li>
-            <button
-              className={`nav-link ${currentPage === 'update-saldo' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('update-saldo')}
-            >
-              Update Saldo
-            </button>
-          </li>
-        </ul>
-      </div>
+          <ul className="navbar-menu">
+            <li>
+              <button
+                className={`nav-link ${currentPage === 'rules' ? 'active' : ''}`}
+                onClick={() => setCurrentPage('rules')}
+              >
+                Rules
+              </button>
+            </li>
+            {isAdmin && (
+              <>
+                <li>
+                  <button
+                    className={`nav-link ${currentPage === 'join' ? 'active' : ''}`}
+                    onClick={() => setCurrentPage('join')}
+                  >
+                    Join
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`nav-link ${currentPage === 'tournament' ? 'active' : ''}`}
+                    onClick={() => setCurrentPage('tournament')}
+                  >
+                    Tournament
+                  </button>
+                </li>
+              </>
+            )}
+            <li>
+              <button
+                className={`nav-link ${currentPage === 'standings' ? 'active' : ''}`}
+                onClick={() => setCurrentPage('standings')}
+              >
+                Standings
+              </button>
+            </li>
+          </ul>
+        </div>
       </nav>
 
       {showAdminModal && (

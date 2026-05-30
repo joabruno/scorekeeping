@@ -60,6 +60,7 @@ This builds and pushes the `dist` folder to the `gh-pages` branch (requires `gh-
 - 📱 Responsive design
 - 🎨 Beautiful UI with gradient background
 - 📝 Markdown-based rules rendering
+- ✅ Auto-open public check-in popup when a tournament check-in is active
 - ⚡ Built with Vite (fast builds)
 - 🚀 Single Page App (SPA)
 
