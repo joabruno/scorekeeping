@@ -63,6 +63,7 @@ function Standings() {
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Start</th>
                 <th>Check in 1</th>
                 <th>Check in 2</th>
                 <th>Check in 3</th>
@@ -73,7 +74,8 @@ function Standings() {
               {participants.map((participant, index) => (
                 <tr key={`${participant.name}-${index}`}>
                   <td>{participant.name}</td>
-                  <td>{participant.saldo || '-'}</td>
+                  <td>{participant.start || '-'}</td>
+                  <td>{participant.checkIn1 || '-'}</td>
                   <td>{participant.checkIn2 || '-'}</td>
                   <td>{participant.checkIn3 || '-'}</td>
                   <td>{participant.endResult || '-'}</td>

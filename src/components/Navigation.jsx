@@ -14,6 +14,14 @@ function Navigation({ currentPage, setCurrentPage }) {
           </li>
           <li>
             <button
+              className={`nav-link ${currentPage === 'join' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('join')}
+            >
+              Join
+            </button>
+          </li>
+          <li>
+            <button
               className={`nav-link ${currentPage === 'tournament' ? 'active' : ''}`}
               onClick={() => setCurrentPage('tournament')}
             >

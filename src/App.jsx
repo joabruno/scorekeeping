@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Navigation from './components/Navigation'
 import RulesDisplay from './components/RulesDisplay'
+import Join from './components/Join'
 import Tournament from './components/Tournament'
 import Standings from './components/Standings'
 import UpdateSaldo from './components/UpdateSaldo'
@@ -14,6 +15,7 @@ function App() {
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <main className="main-content">
         {currentPage === 'rules' && <RulesDisplay />}
+        {currentPage === 'join' && <Join />}
         {currentPage === 'tournament' && <Tournament />}
         {currentPage === 'standings' && <Standings />}
         {currentPage === 'update-saldo' && <UpdateSaldo />}

@@ -5,8 +5,8 @@ import { database } from '../config/firebase'
 function UpdateSaldo() {
   const [participants, setParticipants] = useState([])
   const [selectedParticipantIndex, setSelectedParticipantIndex] = useState('')
-  const [saldo, setSaldo] = useState('')
-  const [activeUpdateField, setActiveUpdateField] = useState('saldo')
+  const [updateValue, setUpdateValue] = useState('')
+  const [activeUpdateField, setActiveUpdateField] = useState('checkIn1')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
@@ -21,10 +21,10 @@ function UpdateSaldo() {
           if (snapshot.exists()) {
             const data = snapshot.val()
             setParticipants(data.participants || [])
-            setActiveUpdateField(data.activeUpdateField || 'saldo')
+            setActiveUpdateField(data.activeUpdateField || 'checkIn1')
           } else {
             setParticipants([])
-            setActiveUpdateField('saldo')
+            setActiveUpdateField('checkIn1')
           }
 
           setLoading(false)
@@ -47,7 +47,7 @@ function UpdateSaldo() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    if (selectedParticipantIndex === '' || saldo.trim() === '') {
+    if (selectedParticipantIndex === '' || updateValue.trim() === '') {
       return
     }
 
@@ -74,14 +74,14 @@ function UpdateSaldo() {
           return participant
         }
 
-        return { ...participant, [activeUpdateField]: saldo.trim() }
+        return { ...participant, [activeUpdateField]: updateValue.trim() }
       })
 
       await update(tournamentRef, { participants: updatedParticipants })
 
       setError(null)
       setSuccessMessage(`Updated ${activeUpdateField} successfully.`)
-      setSaldo('')
+      setUpdateValue('')
       setSelectedParticipantIndex('')
     } catch (err) {
       setError('Failed to update saldo')
@@ -106,9 +106,9 @@ function UpdateSaldo() {
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
 
-      <p className="update-target-note">
-        Current update target: <strong>{activeUpdateField === 'saldo' ? 'Check in 1' : activeUpdateField === 'checkIn2' ? 'Check in 2' : activeUpdateField === 'checkIn3' ? 'Check in 3' : 'End result'}</strong>
-      </p>
+        <p className="update-target-note">
+          Current update target: <strong>{activeUpdateField === 'checkIn1' ? 'Check in 1' : activeUpdateField === 'checkIn2' ? 'Check in 2' : activeUpdateField === 'checkIn3' ? 'Check in 3' : 'End result'}</strong>
+        </p>
 
       {participants.length === 0 ? (
         <p>No participants found. Add participants in Tournament first.</p>
@@ -138,8 +138,8 @@ function UpdateSaldo() {
               type="text"
               id="saldo"
               name="saldo"
-              value={saldo}
-              onChange={(event) => setSaldo(event.target.value)}
+              value={updateValue}
+              onChange={(event) => setUpdateValue(event.target.value)}
               placeholder="Enter new value"
               maxLength="50"
               required

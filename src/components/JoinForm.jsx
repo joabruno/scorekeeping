@@ -3,7 +3,7 @@ import { useState } from 'react'
 function JoinForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: '',
-    saldo: ''
+    start: ''
   })
 
   const handleChange = (e) => {
@@ -16,9 +16,9 @@ function JoinForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (formData.name.trim() && formData.saldo.trim()) {
+    if (formData.name.trim() && formData.start.trim()) {
       onSubmit(formData)
-      setFormData({ name: '', saldo: '' })
+      setFormData({ name: '', start: '' })
     }
   }
 
@@ -39,14 +39,14 @@ function JoinForm({ onSubmit }) {
       </div>
 
       <div className="form-group">
-        <label htmlFor="playerSaldo">Saldo:</label>
+        <label htmlFor="playerStart">Start:</label>
         <input
           type="text"
-          id="playerSaldo"
-          name="saldo"
-          value={formData.saldo}
+          id="playerStart"
+          name="start"
+          value={formData.start}
           onChange={handleChange}
-          placeholder="Your saldo"
+          placeholder="Your start saldo"
           maxLength="50"
           required
         />

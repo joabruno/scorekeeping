@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
-import { ref, set, get, onValue, update } from 'firebase/database'
+import { ref, set, onValue, update } from 'firebase/database'
 import { database } from '../config/firebase'
-import JoinForm from './JoinForm'
 
 function Tournament() {
   const [tournamentActive, setTournamentActive] = useState(false)
   const [tournamentStarted, setTournamentStarted] = useState(false)
-  const [participants, setParticipants] = useState([])
-  const [activeUpdateField, setActiveUpdateField] = useState('saldo')
+  const [activeUpdateField, setActiveUpdateField] = useState('checkIn1')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -22,13 +20,11 @@ function Tournament() {
           const data = snapshot.val()
           setTournamentActive(data.isActive || false)
           setTournamentStarted(data.hasStarted || false)
-          setParticipants(data.participants || [])
-          setActiveUpdateField(data.activeUpdateField || 'saldo')
+          setActiveUpdateField(data.activeUpdateField || 'checkIn1')
         } else {
           setTournamentActive(false)
           setTournamentStarted(false)
-          setParticipants([])
-          setActiveUpdateField('saldo')
+          setActiveUpdateField('checkIn1')
         }
         setLoading(false)
         setError(null)
@@ -53,7 +49,7 @@ function Tournament() {
         isActive: true,
         hasStarted: false,
         participants: [],
-        activeUpdateField: 'saldo'
+        activeUpdateField: 'checkIn1'
       })
       setError(null)
     } catch (err) {
@@ -80,28 +76,11 @@ function Tournament() {
         isActive: false,
         hasStarted: false,
         participants: [],
-        activeUpdateField: 'saldo'
+        activeUpdateField: 'checkIn1'
       })
       setError(null)
     } catch (err) {
       setError('Failed to reset tournament')
-      console.error('Error:', err)
-    }
-  }
-
-  const handleJoinTournament = async (formData) => {
-    try {
-      const tournamentRef = ref(database, 'tournament')
-      const snapshot = await get(tournamentRef)
-      
-      if (snapshot.exists()) {
-        const data = snapshot.val()
-        const updatedParticipants = [...(data.participants || []), formData]
-        await update(tournamentRef, { participants: updatedParticipants })
-        setError(null)
-      }
-    } catch (err) {
-      setError('Failed to join tournament')
       console.error('Error:', err)
     }
   }
@@ -146,7 +125,6 @@ function Tournament() {
         <div className="tournament-active">
           <div className="tournament-status">
             <h3>Sign-ups are open!</h3>
-            <p className="participant-count">Participants: {participants.length}</p>
           </div>
 
           <div className="tournament-field-control">
@@ -156,39 +134,11 @@ function Tournament() {
               value={activeUpdateField}
               onChange={handleUpdateFieldChange}
             >
-              <option value="saldo">Check in 1</option>
+              <option value="checkIn1">Check in 1</option>
               <option value="checkIn2">Check in 2</option>
               <option value="checkIn3">Check in 3</option>
               <option value="endResult">End result</option>
             </select>
-          </div>
-
-          <JoinForm onSubmit={handleJoinTournament} />
-
-          <div className="participants-list">
-            <h3>Participants ({participants.length})</h3>
-            {participants.length === 0 ? (
-              <p className="no-participants">No participants yet. Be the first to join!</p>
-            ) : (
-              <table className="participants-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Saldo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {participants.map((participant, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{participant.name}</td>
-                      <td>{participant.saldo}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
           </div>
 
           <button className="btn btn-danger" onClick={handleBeginTournament}>
@@ -201,22 +151,8 @@ function Tournament() {
         <div className="tournament-active">
           <div className="tournament-status">
             <h3>Tournament has started!</h3>
-            <p className="participant-count">Participants locked: {participants.length}</p>
           </div>
 
-          <div className="tournament-field-control">
-            <label htmlFor="activeUpdateFieldStarted">Updates go to:</label>
-            <select
-              id="activeUpdateFieldStarted"
-              value={activeUpdateField}
-              onChange={handleUpdateFieldChange}
-            >
-              <option value="saldo">Check in 1</option>
-              <option value="checkIn2">Check in 2</option>
-              <option value="checkIn3">Check in 3</option>
-              <option value="endResult">End result</option>
-            </select>
-          </div>
 
           <p>Check the standings page to see the scoreboard.</p>
 
