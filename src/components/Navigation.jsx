@@ -46,16 +46,18 @@ function Navigation({ currentPage, setCurrentPage, isAdmin, onUnlockAdmin, onLoc
 
   return (
     <>
-      <nav className="navbar">
+      <nav
+        className="navbar"
+        onMouseDown={startLongPressTimer}
+        onMouseUp={clearLongPressTimer}
+        onMouseLeave={clearLongPressTimer}
+        onTouchStart={startLongPressTimer}
+        onTouchEnd={clearLongPressTimer}
+        onTouchCancel={clearLongPressTimer}
+      >
         <div className="navbar-container">
           <h1
             className={`navbar-title ${isAdmin ? 'admin-active' : ''}`}
-            onMouseDown={startLongPressTimer}
-            onMouseUp={clearLongPressTimer}
-            onMouseLeave={clearLongPressTimer}
-            onTouchStart={startLongPressTimer}
-            onTouchEnd={clearLongPressTimer}
-            onTouchCancel={clearLongPressTimer}
             title="Long press for admin"
           >
             Betting App
