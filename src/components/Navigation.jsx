@@ -28,6 +28,14 @@ function Navigation({ currentPage, setCurrentPage }) {
               Standings
             </button>
           </li>
+          <li>
+            <button
+              className={`nav-link ${currentPage === 'update-saldo' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('update-saldo')}
+            >
+              Update Saldo
+            </button>
+          </li>
         </ul>
       </div>
     </nav>

@@ -5,6 +5,7 @@ import JoinForm from './JoinForm'
 
 function Tournament() {
   const [tournamentActive, setTournamentActive] = useState(false)
+  const [tournamentStarted, setTournamentStarted] = useState(false)
   const [participants, setParticipants] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -19,9 +20,11 @@ function Tournament() {
         if (snapshot.exists()) {
           const data = snapshot.val()
           setTournamentActive(data.isActive || false)
+          setTournamentStarted(data.hasStarted || false)
           setParticipants(data.participants || [])
         } else {
           setTournamentActive(false)
+          setTournamentStarted(false)
           setParticipants([])
         }
         setLoading(false)
@@ -43,7 +46,7 @@ function Tournament() {
   const handleStartTournament = async () => {
     try {
       const tournamentRef = ref(database, 'tournament')
-      await set(tournamentRef, { isActive: true, participants: [] })
+      await set(tournamentRef, { isActive: true, hasStarted: false, participants: [] })
       setError(null)
     } catch (err) {
       setError('Failed to start tournament')
@@ -51,13 +54,24 @@ function Tournament() {
     }
   }
 
-  const handleEndTournament = async () => {
+  const handleBeginTournament = async () => {
     try {
       const tournamentRef = ref(database, 'tournament')
-      await set(tournamentRef, { isActive: false, participants: [] })
+      await update(tournamentRef, { isActive: false, hasStarted: true })
       setError(null)
     } catch (err) {
-      setError('Failed to end tournament')
+      setError('Failed to begin tournament')
+      console.error('Error:', err)
+    }
+  }
+
+  const handleResetTournament = async () => {
+    try {
+      const tournamentRef = ref(database, 'tournament')
+      await set(tournamentRef, { isActive: false, hasStarted: false, participants: [] })
+      setError(null)
+    } catch (err) {
+      setError('Failed to reset tournament')
       console.error('Error:', err)
     }
   }
@@ -94,7 +108,7 @@ function Tournament() {
 
       {error && <div className="error-message">{error}</div>}
 
-      {!tournamentActive ? (
+      {!tournamentActive && !tournamentStarted ? (
         <div className="tournament-start">
           <p>No tournament is currently active.</p>
           <button className="btn btn-primary" onClick={handleStartTournament}>
@@ -104,7 +118,7 @@ function Tournament() {
       ) : (
         <div className="tournament-active">
           <div className="tournament-status">
-            <h3>Tournament is Active!</h3>
+            <h3>Sign-ups are open!</h3>
             <p className="participant-count">Participants: {participants.length}</p>
           </div>
 
@@ -136,8 +150,23 @@ function Tournament() {
             )}
           </div>
 
-          <button className="btn btn-danger" onClick={handleEndTournament}>
+          <button className="btn btn-danger" onClick={handleBeginTournament}>
             Start Tournament
+          </button>
+        </div>
+      )}
+
+      {!tournamentActive && tournamentStarted && (
+        <div className="tournament-active">
+          <div className="tournament-status">
+            <h3>Tournament has started!</h3>
+            <p className="participant-count">Participants locked: {participants.length}</p>
+          </div>
+
+          <p>Check the standings page to see the scoreboard.</p>
+
+          <button className="btn btn-danger" onClick={handleResetTournament}>
+            Reset Tournament
           </button>
         </div>
       )}
