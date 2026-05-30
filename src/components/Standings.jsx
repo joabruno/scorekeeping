@@ -3,6 +3,7 @@ import { get, ref, onValue, update } from 'firebase/database'
 import { database } from '../config/firebase'
 
 const UPDATE_FIELD_LABELS = {
+  none: 'No check-in',
   checkIn1: 'Check in 1',
   checkIn2: 'Check in 2',
   checkIn3: 'Check in 3',
@@ -20,7 +21,7 @@ const STANDINGS_FIELDS = [
 function Standings() {
   const [hasStarted, setHasStarted] = useState(false)
   const [participants, setParticipants] = useState([])
-  const [activeUpdateField, setActiveUpdateField] = useState('checkIn1')
+  const [activeUpdateField, setActiveUpdateField] = useState('none')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedParticipantIndex, setSelectedParticipantIndex] = useState(null)
@@ -37,11 +38,11 @@ function Standings() {
           const data = snapshot.val()
           setHasStarted(Boolean(data.hasStarted))
           setParticipants(data.participants || [])
-          setActiveUpdateField(data.activeUpdateField || 'checkIn1')
+          setActiveUpdateField(data.activeUpdateField || 'none')
         } else {
           setHasStarted(false)
           setParticipants([])
-          setActiveUpdateField('checkIn1')
+          setActiveUpdateField('none')
         }
 
         setLoading(false)
@@ -63,6 +64,8 @@ function Standings() {
     return UPDATE_FIELD_LABELS[activeUpdateField] || 'Current round'
   }, [activeUpdateField])
 
+  const hasOpenCheckIn = ['checkIn1', 'checkIn2', 'checkIn3', 'endResult'].includes(activeUpdateField)
+
   const selectedParticipant =
     selectedParticipantIndex === null ? null : participants[selectedParticipantIndex] || null
 
@@ -73,6 +76,10 @@ function Standings() {
   }
 
   const openEditor = (participant, index) => {
+    if (!hasOpenCheckIn) {
+      return
+    }
+
     setSelectedParticipantIndex(index)
     setUpdateValue(participant?.[activeUpdateField] || '')
     setSuccessMessage('')
@@ -157,7 +164,15 @@ function Standings() {
         <div className="participants-list">
           <h3>Scoreboard</h3>
           <p className="update-target-note">
-            Update people directly here for: <strong>{activeUpdateLabel}</strong>
+            {hasOpenCheckIn ? (
+              <>
+                Update people directly here for: <strong>{activeUpdateLabel}</strong>
+              </>
+            ) : (
+              <>
+                <strong>{activeUpdateLabel}</strong> is active right now, so users are not being prompted and edits are paused.
+              </>
+            )}
           </p>
           <table className="participants-table">
             <thead>
@@ -173,7 +188,7 @@ function Standings() {
                 <tr key={`${participant.name}-${index}`}>
                   <td>{participant.name}</td>
                   {STANDINGS_FIELDS.map((field) => {
-                    const isActiveField = field.key === activeUpdateField
+                    const isActiveField = hasOpenCheckIn && field.key === activeUpdateField
 
                     return (
                       <td key={field.key} className={isActiveField ? 'standings-edit-cell' : ''}>

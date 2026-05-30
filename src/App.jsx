@@ -13,12 +13,11 @@ const ADMIN_STORAGE_KEY = 'isAdminUnlocked'
 const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY || 'change-me'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('rules')
+  const [currentPage, setCurrentPage] = useState('standings')
   const [isCheckInOpen, setIsCheckInOpen] = useState(false)
   const [showCheckInModal, setShowCheckInModal] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const hasAutoOpenedCheckInRef = useRef(false)
-  const hasAutoOpenedStandingsRef = useRef(false)
   const [isAdmin, setIsAdmin] = useState(() => {
     if (typeof window === 'undefined') {
       return false
@@ -41,17 +40,15 @@ function App() {
       }
 
       const data = snapshot.val()
+      const tournamentActive = Boolean(data.isActive)
       const hasStarted = Boolean(data.hasStarted)
       const participants = data.participants || []
       const activeUpdateField = data.activeUpdateField || ''
       const validFields = ['checkIn1', 'checkIn2', 'checkIn3', 'endResult']
       const shouldShowCheckIn = hasStarted && participants.length > 0 && validFields.includes(activeUpdateField)
 
-      if (!hasStarted) {
-        hasAutoOpenedStandingsRef.current = false
-      } else if (!hasAutoOpenedStandingsRef.current) {
-        hasAutoOpenedStandingsRef.current = true
-        setCurrentPage((previousPage) => (previousPage === 'rules' ? 'standings' : previousPage))
+      if ((tournamentActive || hasStarted) && !isAdmin) {
+        setCurrentPage('standings')
       }
 
       setIsCheckInOpen(shouldShowCheckIn)

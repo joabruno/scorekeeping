@@ -5,7 +5,7 @@ import { database } from '../config/firebase'
 function Tournament() {
   const [tournamentActive, setTournamentActive] = useState(false)
   const [tournamentStarted, setTournamentStarted] = useState(false)
-  const [activeUpdateField, setActiveUpdateField] = useState('checkIn1')
+  const [activeUpdateField, setActiveUpdateField] = useState('none')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -20,11 +20,11 @@ function Tournament() {
           const data = snapshot.val()
           setTournamentActive(data.isActive || false)
           setTournamentStarted(data.hasStarted || false)
-          setActiveUpdateField(data.activeUpdateField || 'checkIn1')
+          setActiveUpdateField(data.activeUpdateField || 'none')
         } else {
           setTournamentActive(false)
           setTournamentStarted(false)
-          setActiveUpdateField('checkIn1')
+          setActiveUpdateField('none')
         }
         setLoading(false)
         setError(null)
@@ -49,7 +49,7 @@ function Tournament() {
         isActive: true,
         hasStarted: false,
         participants: [],
-        activeUpdateField: 'checkIn1'
+        activeUpdateField: 'none'
       })
       setError(null)
     } catch (err) {
@@ -76,7 +76,7 @@ function Tournament() {
         isActive: false,
         hasStarted: false,
         participants: [],
-        activeUpdateField: 'checkIn1'
+        activeUpdateField: 'none'
       })
       setError(null)
     } catch (err) {
@@ -134,6 +134,7 @@ function Tournament() {
               value={activeUpdateField}
               onChange={handleUpdateFieldChange}
             >
+              <option value="none">No check-in</option>
               <option value="checkIn1">Check in 1</option>
               <option value="checkIn2">Check in 2</option>
               <option value="checkIn3">Check in 3</option>
