@@ -6,6 +6,7 @@ function UpdateSaldo() {
   const [participants, setParticipants] = useState([])
   const [selectedParticipantIndex, setSelectedParticipantIndex] = useState('')
   const [saldo, setSaldo] = useState('')
+  const [activeUpdateField, setActiveUpdateField] = useState('saldo')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
@@ -20,8 +21,10 @@ function UpdateSaldo() {
           if (snapshot.exists()) {
             const data = snapshot.val()
             setParticipants(data.participants || [])
+            setActiveUpdateField(data.activeUpdateField || 'saldo')
           } else {
             setParticipants([])
+            setActiveUpdateField('saldo')
           }
 
           setLoading(false)
@@ -66,14 +69,18 @@ function UpdateSaldo() {
         return
       }
 
-      const updatedParticipants = currentParticipants.map((participant, index) =>
-        index === participantIndex ? { ...participant, saldo: saldo.trim() } : participant
-      )
+      const updatedParticipants = currentParticipants.map((participant, index) => {
+        if (index !== participantIndex) {
+          return participant
+        }
+
+        return { ...participant, [activeUpdateField]: saldo.trim() }
+      })
 
       await update(tournamentRef, { participants: updatedParticipants })
 
       setError(null)
-      setSuccessMessage('Saldo updated successfully.')
+      setSuccessMessage(`Updated ${activeUpdateField} successfully.`)
       setSaldo('')
       setSelectedParticipantIndex('')
     } catch (err) {
@@ -99,6 +106,10 @@ function UpdateSaldo() {
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
 
+      <p className="update-target-note">
+        Current update target: <strong>{activeUpdateField === 'saldo' ? 'Check in 1' : activeUpdateField === 'checkIn2' ? 'Check in 2' : activeUpdateField === 'checkIn3' ? 'Check in 3' : 'End result'}</strong>
+      </p>
+
       {participants.length === 0 ? (
         <p>No participants found. Add participants in Tournament first.</p>
       ) : (
@@ -122,14 +133,14 @@ function UpdateSaldo() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="saldo">New saldo:</label>
+            <label htmlFor="saldo">New value:</label>
             <input
               type="text"
               id="saldo"
               name="saldo"
               value={saldo}
               onChange={(event) => setSaldo(event.target.value)}
-              placeholder="Enter new saldo"
+              placeholder="Enter new value"
               maxLength="50"
               required
             />

@@ -133,6 +133,46 @@
   margin-bottom: 30px;
 }
 
+.tournament-field-control {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-bottom: 30px;
+}
+
+.tournament-field-control label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.tournament-field-control select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+}
+
+.tournament-field-control select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.update-target-note {
+  margin: 0 0 20px 0;
+  color: #555;
+  font-size: 15px;
+}
+
 .error-message {
   background: #ffe0e0;
   border-left: 4px solid #ff6b6b;

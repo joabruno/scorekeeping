@@ -7,6 +7,7 @@ function Tournament() {
   const [tournamentActive, setTournamentActive] = useState(false)
   const [tournamentStarted, setTournamentStarted] = useState(false)
   const [participants, setParticipants] = useState([])
+  const [activeUpdateField, setActiveUpdateField] = useState('saldo')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -22,10 +23,12 @@ function Tournament() {
           setTournamentActive(data.isActive || false)
           setTournamentStarted(data.hasStarted || false)
           setParticipants(data.participants || [])
+          setActiveUpdateField(data.activeUpdateField || 'saldo')
         } else {
           setTournamentActive(false)
           setTournamentStarted(false)
           setParticipants([])
+          setActiveUpdateField('saldo')
         }
         setLoading(false)
         setError(null)
@@ -46,7 +49,12 @@ function Tournament() {
   const handleStartTournament = async () => {
     try {
       const tournamentRef = ref(database, 'tournament')
-      await set(tournamentRef, { isActive: true, hasStarted: false, participants: [] })
+      await set(tournamentRef, {
+        isActive: true,
+        hasStarted: false,
+        participants: [],
+        activeUpdateField: 'saldo'
+      })
       setError(null)
     } catch (err) {
       setError('Failed to start tournament')
@@ -68,7 +76,12 @@ function Tournament() {
   const handleResetTournament = async () => {
     try {
       const tournamentRef = ref(database, 'tournament')
-      await set(tournamentRef, { isActive: false, hasStarted: false, participants: [] })
+      await set(tournamentRef, {
+        isActive: false,
+        hasStarted: false,
+        participants: [],
+        activeUpdateField: 'saldo'
+      })
       setError(null)
     } catch (err) {
       setError('Failed to reset tournament')
@@ -89,6 +102,20 @@ function Tournament() {
       }
     } catch (err) {
       setError('Failed to join tournament')
+      console.error('Error:', err)
+    }
+  }
+
+  const handleUpdateFieldChange = async (event) => {
+    const nextField = event.target.value
+
+    try {
+      const tournamentRef = ref(database, 'tournament')
+      await update(tournamentRef, { activeUpdateField: nextField })
+      setActiveUpdateField(nextField)
+      setError(null)
+    } catch (err) {
+      setError('Failed to update the active field')
       console.error('Error:', err)
     }
   }
@@ -120,6 +147,20 @@ function Tournament() {
           <div className="tournament-status">
             <h3>Sign-ups are open!</h3>
             <p className="participant-count">Participants: {participants.length}</p>
+          </div>
+
+          <div className="tournament-field-control">
+            <label htmlFor="activeUpdateField">Updates go to:</label>
+            <select
+              id="activeUpdateField"
+              value={activeUpdateField}
+              onChange={handleUpdateFieldChange}
+            >
+              <option value="saldo">Check in 1</option>
+              <option value="checkIn2">Check in 2</option>
+              <option value="checkIn3">Check in 3</option>
+              <option value="endResult">End result</option>
+            </select>
           </div>
 
           <JoinForm onSubmit={handleJoinTournament} />
@@ -161,6 +202,20 @@ function Tournament() {
           <div className="tournament-status">
             <h3>Tournament has started!</h3>
             <p className="participant-count">Participants locked: {participants.length}</p>
+          </div>
+
+          <div className="tournament-field-control">
+            <label htmlFor="activeUpdateFieldStarted">Updates go to:</label>
+            <select
+              id="activeUpdateFieldStarted"
+              value={activeUpdateField}
+              onChange={handleUpdateFieldChange}
+            >
+              <option value="saldo">Check in 1</option>
+              <option value="checkIn2">Check in 2</option>
+              <option value="checkIn3">Check in 3</option>
+              <option value="endResult">End result</option>
+            </select>
           </div>
 
           <p>Check the standings page to see the scoreboard.</p>
