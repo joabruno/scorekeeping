@@ -19,6 +19,17 @@ npm run build
 
 Builds the app for production to the `dist` folder.
 
+## Admin-only pages (without login)
+
+The `Join` and `Tournament` pages are hidden unless admin mode is unlocked.
+
+1. Copy `.env.example` to `.env`
+2. Set `VITE_ADMIN_KEY` to your own secret value
+3. Long-press `Betting App` in the top navigation for about 1 second
+4. Enter the key in the admin modal to unlock admin mode
+
+Admin mode is stored in `sessionStorage`, so it resets when the browser tab/session is closed.
+
 ## Deployment
 
 ### Option 1: Automatic Deployment (Recommended)

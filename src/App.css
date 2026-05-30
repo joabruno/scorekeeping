@@ -22,6 +22,80 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 0.5px;
+  user-select: none;
+}
+
+.navbar-title.admin-active {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+}
+
+.admin-modal {
+  width: min(420px, 100%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-modal h2 {
+  margin: 0;
+  color: #667eea;
+}
+
+.admin-modal label {
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-modal input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.admin-modal input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.admin-modal-error {
+  color: #c92a2a;
+  margin: 0;
+  font-size: 14px;
+}
+
+.admin-modal-status {
+  margin: 0;
+  color: #555;
+}
+
+.admin-modal-close {
+  border: none;
+  background: transparent;
+  color: #667eea;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 6px 0;
 }
 
 .navbar-menu {
@@ -653,6 +727,10 @@
 
   .participants-list {
     padding: 12px;
+  }
+
+  .admin-modal {
+    padding: 16px;
   }
 }
 
