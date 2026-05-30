@@ -18,6 +18,20 @@ const STANDINGS_FIELDS = [
   { key: 'endResult', label: 'End result' },
 ]
 
+const SORT_PRIORITY_FIELDS = ['endResult', 'checkIn3', 'checkIn2', 'checkIn1']
+
+const parseScoreValue = (value) => {
+  if (value === null || value === undefined) {
+    return Number.NEGATIVE_INFINITY
+  }
+
+  const normalized = String(value).trim().replace(',', '.')
+  const numericText = normalized.replace(/[^0-9.-]/g, '')
+  const numericValue = Number.parseFloat(numericText)
+
+  return Number.isFinite(numericValue) ? numericValue : Number.NEGATIVE_INFINITY
+}
+
 function Standings() {
   const [hasStarted, setHasStarted] = useState(false)
   const [participants, setParticipants] = useState([])
@@ -63,6 +77,23 @@ function Standings() {
   const activeUpdateLabel = useMemo(() => {
     return UPDATE_FIELD_LABELS[activeUpdateField] || 'Current round'
   }, [activeUpdateField])
+
+  const sortedParticipants = useMemo(() => {
+    return participants
+      .map((participant, index) => ({ participant, originalIndex: index }))
+      .sort((a, b) => {
+        for (const field of SORT_PRIORITY_FIELDS) {
+          const aValue = parseScoreValue(a.participant?.[field])
+          const bValue = parseScoreValue(b.participant?.[field])
+
+          if (aValue !== bValue) {
+            return bValue - aValue
+          }
+        }
+
+        return (a.participant?.name || '').localeCompare(b.participant?.name || '')
+      })
+  }, [participants])
 
   const hasOpenCheckIn = ['checkIn1', 'checkIn2', 'checkIn3', 'endResult'].includes(activeUpdateField)
 
@@ -174,47 +205,49 @@ function Standings() {
               </>
             )}
           </p>
-          <table className="participants-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                {STANDINGS_FIELDS.map((field) => (
-                  <th key={field.key}>{field.label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {participants.map((participant, index) => (
-                <tr key={`${participant.name}-${index}`}>
-                  <td>{participant.name}</td>
-                  {STANDINGS_FIELDS.map((field) => {
-                    const isActiveField = hasOpenCheckIn && field.key === activeUpdateField
-
-                    return (
-                      <td key={field.key} className={isActiveField ? 'standings-edit-cell' : ''}>
-                        {isActiveField ? (
-                          <button
-                            type="button"
-                            className="standings-cell-button"
-                            onClick={() => openEditor(participant, index)}
-                            aria-label={`Edit ${participant.name} for ${field.label}`}
-                            title={`Edit ${participant.name}`}
-                          >
-                            <span className="standings-cell-value">{participant[field.key] || '-'}</span>
-                            <span className="edit-icon-button" aria-hidden="true">
-                              ✎
-                            </span>
-                          </button>
-                        ) : (
-                          <span className="standings-cell-value">{participant[field.key] || '-'}</span>
-                        )}
-                      </td>
-                    )
-                  })}
+          <div className="participants-table-wrapper">
+            <table className="participants-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  {STANDINGS_FIELDS.map((field) => (
+                    <th key={field.key}>{field.label}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                  {sortedParticipants.map(({ participant, originalIndex }) => (
+                    <tr key={`${participant.name}-${originalIndex}`}>
+                    <td>{participant.name}</td>
+                    {STANDINGS_FIELDS.map((field) => {
+                      const isActiveField = hasOpenCheckIn && field.key === activeUpdateField
+
+                      return (
+                        <td key={field.key} className={isActiveField ? 'standings-edit-cell' : ''}>
+                          {isActiveField ? (
+                            <button
+                              type="button"
+                              className="standings-cell-button"
+                                onClick={() => openEditor(participant, originalIndex)}
+                              aria-label={`Edit ${participant.name} for ${field.label}`}
+                              title={`Edit ${participant.name}`}
+                            >
+                              <span className="standings-cell-value">{participant[field.key] || '-'}</span>
+                              <span className="edit-icon-button" aria-hidden="true">
+                                ✎
+                              </span>
+                            </button>
+                          ) : (
+                            <span className="standings-cell-value">{participant[field.key] || '-'}</span>
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

@@ -538,6 +538,10 @@
   border: 1px solid #eee;
 }
 
+.participants-table-wrapper {
+  overflow-x: auto;
+}
+
 .participants-list h3 {
   color: #333;
   margin-top: 0;
@@ -563,19 +567,23 @@
   border: 1px solid #ddd;
 }
 
+
 .participants-table td {
   padding: 12px;
   border: 1px solid #ddd;
   color: #555;
 }
 
+
 .participants-table tbody tr:nth-child(even) {
   background: #f9f9f9;
 }
 
+
 .participants-table tbody tr:hover {
   background: #f0f4ff;
 }
+
 
 .no-participants {
   color: #999;
@@ -1053,7 +1061,6 @@
   }
 
   .participants-list {
-    overflow-x: auto;
     padding: 16px;
   }
 
